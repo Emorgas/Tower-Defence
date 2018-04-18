@@ -2,45 +2,42 @@
 #include <ostream>
 #include <string>
 #include <SDL.h>
+#include <SDL_image.h>
+
+#include "ResourceManager.h"
+#include "TextureResource.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int TILE_SIZE = 40;
 
-SDL_Window *window;
-SDL_Renderer *renderer;
+bool quit = false;
+
+SDL_Window* window;
+SDL_Renderer* renderer;
+
+ResourceManager* resourceManager;
 
 void logSDLError(std::ostream &os, const std::string &msg)
 {
 	os << msg << " error: " << SDL_GetError() << std::endl;
 }
 
-SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren)
-{
-	SDL_Texture *texture = nullptr;
-	SDL_Surface *loadedImage = SDL_LoadBMP(file.c_str());
-	if (loadedImage != nullptr)
-	{
-		texture = SDL_CreateTextureFromSurface(ren, loadedImage);
-		SDL_FreeSurface(loadedImage);
-		if (texture == nullptr)
-		{
-			logSDLError(std::cout, "CreateTextureFromSurface");
-		}
-	}
-	else
-	{
-		logSDLError(std::cout, "LoadBMP");
-	}
-	return texture;
-}
-
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
+void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h)
 {
 	SDL_Rect dst;
 	dst.x = x;
 	dst.y = y;
-	SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
+	dst.h = h;
+	dst.w = w;
 	SDL_RenderCopy(ren, tex, NULL, &dst);
+}
+
+void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
+{
+	int w, h;
+	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
+	renderTexture(tex, ren, x, y, w, h);
 }
 
 bool init()
@@ -67,6 +64,16 @@ bool init()
 		SDL_Quit();
 		return false;
 	}
+
+	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
+	{
+		logSDLError(std::cout, "IMG_Init");
+		SDL_Quit();
+		return false;
+	}
+
+	resourceManager = new ResourceManager(renderer);
+
 	return true;
 }
 
@@ -77,44 +84,48 @@ int main(int, char**)
 		return 1;
 	}
 
-	std::string imagePath = "res\\images\\background.bmp";
-	SDL_Texture *background = loadTexture(imagePath, renderer);
-	imagePath = "res\\images\\smile.bmp";
-	SDL_Texture *image = loadTexture(imagePath, renderer);
-	if (background == nullptr || image == nullptr)
-	{
-		SDL_DestroyRenderer(renderer);
-		SDL_DestroyWindow(window);
-		SDL_Quit();
-		return 1;
-	}
+	std::string imagePath = "res\\images\\background.png";
+	resourceManager->AddTextureResource(imagePath, "background", renderer);
+	imagePath = "res\\images\\image.png";
+	resourceManager->AddTextureResource(imagePath, "image", renderer);
 
-
-	for (int i = 0; i < 3; i++)
+	while (!quit)
 	{
+
+		// Input loop
+		SDL_Event e;
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+		}
+
 		SDL_RenderClear(renderer);
 
-		int bW, bH;
-		SDL_QueryTexture(background, NULL, NULL, &bW, &bH);
-		renderTexture(background, renderer, 0, 0);
-		renderTexture(background, renderer, bW, 0);
-		renderTexture(background, renderer, 0, bH);
-		renderTexture(background, renderer, bW, bH);
+		int xTiles = SCREEN_WIDTH / TILE_SIZE;
+		int yTiles = SCREEN_HEIGHT / TILE_SIZE;
 
-		int iW, iH;
-		SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-		int x = SCREEN_WIDTH / 2 - iW / 2;
-		int y = SCREEN_HEIGHT / 2 - iH / 2;
-		renderTexture(image, renderer, x, y);
+		for (int i = 0; i < xTiles * yTiles; ++i)
+		{
+			int x = i % xTiles;
+			int y = i / xTiles;
+			renderTexture(resourceManager->GetTextureResource("background")->GetTexture(), renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		}
+
+		TextureResource* res = resourceManager->GetTextureResource("image");
+		int x = SCREEN_WIDTH / 2 - res->GetWidth() / 2;
+		int y = SCREEN_HEIGHT / 2 - res->GetHeight() / 2;
+		renderTexture(res->GetTexture(), renderer, x, y);
 
 		SDL_RenderPresent(renderer);
-		SDL_Delay(1000);
 	}
 
-	SDL_DestroyTexture(background);
-	SDL_DestroyTexture(image);
+	delete resourceManager;
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	IMG_Quit();
 	SDL_Quit();
 	return 0;
 }
