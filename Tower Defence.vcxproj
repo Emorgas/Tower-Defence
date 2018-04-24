@@ -77,6 +77,14 @@
     <IncludePath>C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\VS_Dev_Libs\SDL2_image-2.0.3\include;C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\VS_Dev_Libs\SDL2_image-2.0.3\lib\x86;C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\VS_Dev_Libs\SDL2_image-2.0.3\include;C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\VS_Dev_Libs\SDL2_image-2.0.3\lib\x86;C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -96,6 +104,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,11 +137,14 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureResource.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureResource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

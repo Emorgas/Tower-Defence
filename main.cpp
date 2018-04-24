@@ -6,6 +6,7 @@
 
 #include "ResourceManager.h"
 #include "TextureResource.h"
+#include "Sprite.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -114,10 +115,8 @@ int main(int, char**)
 			renderTexture(resourceManager->GetTextureResource("background")->GetTexture(), renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 		}
 
-		TextureResource* res = resourceManager->GetTextureResource("image");
-		int x = SCREEN_WIDTH / 2 - res->GetWidth() / 2;
-		int y = SCREEN_HEIGHT / 2 - res->GetHeight() / 2;
-		renderTexture(res->GetTexture(), renderer, x, y);
+		Sprite *img = new Sprite(resourceManager->GetTextureResource("image"), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f, 1.0f);
+		img->Draw(renderer);
 
 		SDL_RenderPresent(renderer);
 	}
