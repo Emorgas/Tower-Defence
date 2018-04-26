@@ -48,3 +48,29 @@ void Sprite::Draw(SDL_Renderer *renderer)
 	dst.h = _texture->GetHeight() * _scale.y;
 	SDL_RenderCopy(renderer, _texture->GetTexture(), NULL, &dst);
 }
+
+float Sprite::GetWidth()
+{
+	return _texture->GetWidth() * _scale.x;
+}
+
+float Sprite::GetHeight()
+{
+	return _texture->GetHeight() * _scale.y;
+}
+
+SDL_Point Sprite::GetPosition()
+{
+	return _position;
+}
+
+SDL_Point Sprite::GetScale()
+{
+	return _scale;
+}
+
+void Sprite::MovePos(SDL_Point moveVector)
+{
+	_position.x = _position.x + moveVector.x;
+	_position.y = _position.y + moveVector.y;
+}

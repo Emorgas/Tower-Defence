@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+#include <vector>
 #include <SDL.h>
 #include <SDL_image.h>
 
@@ -10,7 +11,6 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int TILE_SIZE = 40;
 
 bool quit = false;
 
@@ -89,6 +89,21 @@ int main(int, char**)
 	resourceManager->AddTextureResource(imagePath, "background", renderer);
 	imagePath = "res\\images\\image.png";
 	resourceManager->AddTextureResource(imagePath, "image", renderer);
+	Sprite *img = new Sprite(resourceManager->GetTextureResource("image"), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f, 1.0f);
+	float tileWidth = resourceManager->GetTextureResource("background")->GetWidth();
+	float tileHeight = resourceManager->GetTextureResource("background")->GetHeight();
+	int xTiles = SCREEN_WIDTH / tileWidth;
+	int yTiles = SCREEN_HEIGHT / tileHeight;
+	std::vector<Sprite*> backgroundTiles = std::vector<Sprite*>();
+	for (int i = 0; i < xTiles * yTiles; ++i)
+	{
+		int x = i % xTiles;
+		int y = i / xTiles;
+		backgroundTiles.emplace_back(new Sprite(resourceManager->GetTextureResource("background"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
+	}
+	SDL_Point moveVector;
+	moveVector.x = 1;
+	moveVector.y = 1;
 
 	while (!quit)
 	{
@@ -103,21 +118,31 @@ int main(int, char**)
 			}
 		}
 
-		SDL_RenderClear(renderer);
-
-		int xTiles = SCREEN_WIDTH / TILE_SIZE;
-		int yTiles = SCREEN_HEIGHT / TILE_SIZE;
-
-		for (int i = 0; i < xTiles * yTiles; ++i)
+		// Logic
+		if (img->GetPosition().x > SCREEN_WIDTH)
 		{
-			int x = i % xTiles;
-			int y = i / xTiles;
-			renderTexture(resourceManager->GetTextureResource("background")->GetTexture(), renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			moveVector.x = -1;
 		}
+		else if (img->GetPosition().x < 0)
+		{
+			moveVector.x = 1;
+		}
+		if (img->GetPosition().y > SCREEN_HEIGHT)
+		{
+			moveVector.y = -1;
+		}
+		else if (img->GetPosition().y < 0)
+		{
+			moveVector.y = 1;
+		}
+		
+		img->MovePos(moveVector);
 
-		Sprite *img = new Sprite(resourceManager->GetTextureResource("image"), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f, 1.0f);
+		SDL_RenderClear(renderer);
+		for (std::vector<int>::size_type i = 0; i != backgroundTiles.size(); i++) {
+			backgroundTiles[i]->Draw(renderer);
+		}
 		img->Draw(renderer);
-
 		SDL_RenderPresent(renderer);
 	}
 

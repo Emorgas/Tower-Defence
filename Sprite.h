@@ -14,9 +14,16 @@ public:
 	~Sprite();
 
 	void Draw(SDL_Renderer *renderer);
+	float GetWidth();
+	float GetHeight();
+	SDL_Point GetPosition();
+	SDL_Point GetScale();
+	void MovePos(SDL_Point moveVector);
 private:
 	TextureResource *_texture;
 	SDL_Point _position;
 	SDL_Point _scale;
+	float _width;
+	float _height;
 };
 
