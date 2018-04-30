@@ -1,0 +1,2 @@
+res\\images\\background.png;background
+res\\images\\image.png;image

@@ -24,23 +24,6 @@ void logSDLError(std::ostream &os, const std::string &msg)
 	os << msg << " error: " << SDL_GetError() << std::endl;
 }
 
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, int w, int h)
-{
-	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
-	dst.h = h;
-	dst.w = w;
-	SDL_RenderCopy(ren, tex, NULL, &dst);
-}
-
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y)
-{
-	int w, h;
-	SDL_QueryTexture(tex, NULL, NULL, &w, &h);
-	renderTexture(tex, ren, x, y, w, h);
-}
-
 bool init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -78,6 +61,11 @@ bool init()
 	return true;
 }
 
+void loadResources()
+{
+	resourceManager->LoadTexturesFromFile("res\\textures.txt", renderer);
+}
+
 int main(int, char**)
 {
 	if (!init())
@@ -85,13 +73,11 @@ int main(int, char**)
 		return 1;
 	}
 
-	std::string imagePath = "res\\images\\background.png";
-	resourceManager->AddTextureResource(imagePath, "background", renderer);
-	imagePath = "res\\images\\image.png";
-	resourceManager->AddTextureResource(imagePath, "image", renderer);
+	loadResources();
+
 	Sprite *img = new Sprite(resourceManager->GetTextureResource("image"), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f, 1.0f);
-	float tileWidth = resourceManager->GetTextureResource("background")->GetWidth();
-	float tileHeight = resourceManager->GetTextureResource("background")->GetHeight();
+	int tileWidth = resourceManager->GetTextureResource("background")->GetWidth();
+	int tileHeight = resourceManager->GetTextureResource("background")->GetHeight();
 	int xTiles = SCREEN_WIDTH / tileWidth;
 	int yTiles = SCREEN_HEIGHT / tileHeight;
 	std::vector<Sprite*> backgroundTiles = std::vector<Sprite*>();
