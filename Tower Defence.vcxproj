@@ -151,6 +151,7 @@
     <Image Include="defaultImage.png" />
     <Image Include="res\images\background.png" />
     <Image Include="res\images\image.png" />
+    <Image Include="res\images\spritesheet.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResourceManager.h" />
@@ -159,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\textures.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\spritesheet.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

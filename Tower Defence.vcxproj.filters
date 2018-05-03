@@ -38,6 +38,9 @@
     <Image Include="defaultImage.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\images\spritesheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextureResource.h">
@@ -54,5 +57,10 @@
     <Text Include="res\textures.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\spritesheet.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
