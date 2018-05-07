@@ -2,11 +2,20 @@
 
 
 
-TextureResource::TextureResource(SDL_Texture* texture, const char* resourceName)
+TextureResource::TextureResource(SDL_Texture* texture, const char* resourceName, SDL_Rect* srcRect)
 {
 	_texture = texture;
 	_resourceName = resourceName;
-	SDL_QueryTexture(_texture, NULL, NULL, &_width, &_height);
+	_srcRect = srcRect;
+	if (srcRect == NULL)
+	{
+		SDL_QueryTexture(_texture, NULL, NULL, &_width, &_height);
+	}
+	else
+	{
+		_width = _srcRect->w;
+		_height = _srcRect->h;
+	}
 }
 
 
@@ -33,4 +42,9 @@ int TextureResource::GetWidth()
 int TextureResource::GetHeight()
 {
 	return _height;
+}
+
+SDL_Rect* TextureResource::GetSourceRect()
+{
+	return _srcRect;
 }

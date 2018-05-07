@@ -46,7 +46,7 @@ void Sprite::Draw(SDL_Renderer *renderer)
 	dst.y = _position.y;
 	dst.w = _texture->GetWidth() * _scale.x;
 	dst.h = _texture->GetHeight() * _scale.y;
-	SDL_RenderCopy(renderer, _texture->GetTexture(), NULL, &dst);
+	SDL_RenderCopy(renderer, _texture->GetTexture(), _texture->GetSourceRect(), &dst);
 }
 
 float Sprite::GetWidth()

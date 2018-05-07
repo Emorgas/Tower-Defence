@@ -64,6 +64,7 @@ bool init()
 void loadResources()
 {
 	resourceManager->LoadTexturesFromFile("res\\textures.txt", renderer);
+	resourceManager->LoadTextureAtlasFromJSON("res\\spritesheet.json", "res\\images\\spritesheet.png", renderer);
 }
 
 int main(int, char**)
@@ -75,17 +76,16 @@ int main(int, char**)
 
 	loadResources();
 
-	Sprite *img = new Sprite(resourceManager->GetTextureResource("image"), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f, 1.0f);
-	int tileWidth = resourceManager->GetTextureResource("background")->GetWidth();
-	int tileHeight = resourceManager->GetTextureResource("background")->GetHeight();
-	int xTiles = SCREEN_WIDTH / tileWidth;
-	int yTiles = SCREEN_HEIGHT / tileHeight;
+	int tileWidth = resourceManager->GetTextureResource("D_P_HTSPT_A")->GetWidth();
+	int tileHeight = resourceManager->GetTextureResource("D_P_HTSPT_A")->GetHeight();
+	int xTiles = ceil((float)SCREEN_WIDTH / (float)tileWidth);
+	int yTiles = ceil((float)SCREEN_HEIGHT / (float)tileHeight);
 	std::vector<Sprite*> backgroundTiles = std::vector<Sprite*>();
 	for (int i = 0; i < xTiles * yTiles; ++i)
 	{
 		int x = i % xTiles;
 		int y = i / xTiles;
-		backgroundTiles.emplace_back(new Sprite(resourceManager->GetTextureResource("background"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
+		backgroundTiles.emplace_back(new Sprite(resourceManager->GetTextureResource("D_P_HTSPT_A"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
 	}
 	SDL_Point moveVector;
 	moveVector.x = 1;
@@ -103,32 +103,10 @@ int main(int, char**)
 				quit = true;
 			}
 		}
-
-		// Logic
-		if (img->GetPosition().x > SCREEN_WIDTH)
-		{
-			moveVector.x = -1;
-		}
-		else if (img->GetPosition().x < 0)
-		{
-			moveVector.x = 1;
-		}
-		if (img->GetPosition().y > SCREEN_HEIGHT)
-		{
-			moveVector.y = -1;
-		}
-		else if (img->GetPosition().y < 0)
-		{
-			moveVector.y = 1;
-		}
-		
-		img->MovePos(moveVector);
-
 		SDL_RenderClear(renderer);
 		for (std::vector<int>::size_type i = 0; i != backgroundTiles.size(); i++) {
 			backgroundTiles[i]->Draw(renderer);
 		}
-		img->Draw(renderer);
 		SDL_RenderPresent(renderer);
 	}
 
