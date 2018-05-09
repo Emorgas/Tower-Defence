@@ -1,50 +1,51 @@
 #include "TextureResource.h"
 
-
-
-TextureResource::TextureResource(SDL_Texture* texture, const char* resourceName, SDL_Rect* srcRect)
+namespace Engine
 {
-	_texture = texture;
-	_resourceName = resourceName;
-	_srcRect = srcRect;
-	if (srcRect == NULL)
+	TextureResource::TextureResource(SDL_Texture* texture, const char* resourceName, SDL_Rect* srcRect)
 	{
-		SDL_QueryTexture(_texture, NULL, NULL, &_width, &_height);
+		_texture = texture;
+		_resourceName = resourceName;
+		_srcRect = srcRect;
+		if (srcRect == NULL)
+		{
+			SDL_QueryTexture(_texture, NULL, NULL, &_width, &_height);
+		}
+		else
+		{
+			_width = _srcRect->w;
+			_height = _srcRect->h;
+		}
 	}
-	else
+
+
+	TextureResource::~TextureResource()
 	{
-		_width = _srcRect->w;
-		_height = _srcRect->h;
+		SDL_DestroyTexture(_texture);
 	}
-}
 
+	std::string TextureResource::GetResourceName()
+	{
+		return _resourceName;
+	}
 
-TextureResource::~TextureResource()
-{
-	SDL_DestroyTexture(_texture);
-}
+	SDL_Texture * TextureResource::GetTexture()
+	{
+		return _texture;
+	}
 
-std::string TextureResource::GetResourceName()
-{
-	return _resourceName;
-}
+	int TextureResource::GetWidth()
+	{
+		return _width;
+	}
 
-SDL_Texture * TextureResource::GetTexture()
-{
-	return _texture;
-}
+	int TextureResource::GetHeight()
+	{
+		return _height;
+	}
 
-int TextureResource::GetWidth()
-{
-	return _width;
-}
-
-int TextureResource::GetHeight()
-{
-	return _height;
-}
-
-SDL_Rect* TextureResource::GetSourceRect()
-{
-	return _srcRect;
+	SDL_Rect* TextureResource::GetSourceRect()
+	{
+		return _srcRect;
+	}
 }

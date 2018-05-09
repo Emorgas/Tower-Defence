@@ -2,21 +2,23 @@
 #include <string>
 #include <SDL.h>
 
-class TextureResource
+namespace Engine
 {
-public:
-	TextureResource(SDL_Texture* texture, const char* resourceName, SDL_Rect* srcRect);
-	~TextureResource();
-	std::string GetResourceName();
-	SDL_Texture* GetTexture();
-	int GetWidth();
-	int GetHeight();
-	SDL_Rect * GetSourceRect();
-private:
-	std::string _resourceName;
-	SDL_Texture* _texture;
-	SDL_Rect* _srcRect = NULL;
-	int _width;
-	int _height;
-};
-
+	class TextureResource
+	{
+	public:
+		TextureResource(SDL_Texture* texture, const char* resourceName, SDL_Rect* srcRect);
+		~TextureResource();
+		std::string GetResourceName();
+		SDL_Texture* GetTexture();
+		int GetWidth();
+		int GetHeight();
+		SDL_Rect * GetSourceRect();
+	private:
+		std::string _resourceName;
+		SDL_Texture* _texture;
+		SDL_Rect* _srcRect = NULL;
+		int _width;
+		int _height;
+	};
+}

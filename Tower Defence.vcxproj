@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\VS_Dev_Libs\SDL2_image-2.0.3\include;C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\VS_Dev_Libs\SDL2_image-2.0.3\lib\x86;C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\VS_Dev_Libs\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\VS_Dev_Libs\Rapid JSON;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VS_Dev_Libs\SDL2_image-2.0.3\lib\x86;C:\VS_Dev_Libs\SDL2-2.0.8\lib\x86;C:\VS_Dev_Libs\Rapid JSON;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EngineRunner.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -155,6 +157,8 @@
     <Image Include="res\images\spritesheet.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EngineRunner.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureResource.h" />
