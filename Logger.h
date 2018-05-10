@@ -8,6 +8,6 @@ namespace Engine
 	public:
 		static void LogSDLError(std::ostream &os, const std::string &msg);
 		static void LogError(std::ostream &os, const std::string &msg);
-
+		static void Log(std::ostream & os, const std::string & msg);
 	};
 }

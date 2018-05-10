@@ -10,14 +10,19 @@ using namespace rapidjson;
 
 namespace Engine
 {
+	ResourceManager & ResourceManager::GetInstance()
+	{
+		static ResourceManager instance;
 
-	ResourceManager::ResourceManager(SDL_Renderer* renderer)
+		return instance;
+	}
+
+	void ResourceManager::Init(SDL_Renderer* renderer)
 	{
 		AddTextureResource(_defaultImagePath, _defaultImageName, renderer, NULL);
 	}
 
-
-	ResourceManager::~ResourceManager()
+	void ResourceManager::CleanupResources()
 	{
 		for (map<string, TextureResource*>::iterator it = _textures.begin(); it != _textures.end(); ++it)
 			delete it->second;

@@ -41,10 +41,10 @@
     <Image Include="res\images\image.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="defaultImage.png">
+    <Image Include="res\images\spritesheet.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\images\spritesheet.png">
+    <Image Include="res\images\defaultImage.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

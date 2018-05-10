@@ -12,6 +12,11 @@ namespace Engine
 
 	void Logger::LogError(std::ostream & os, const std::string & msg)
 	{
-		os << "Error: " << msg << SDL_GetError() << std::endl;
+		os << "Error: " << msg << std::endl;
+	}
+
+	void Logger::Log(std::ostream &os, const std::string &msg)
+	{
+		os << msg << std::endl;
 	}
 }

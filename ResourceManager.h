@@ -9,13 +9,19 @@ namespace Engine
 	class ResourceManager
 	{
 	public:
-		ResourceManager(SDL_Renderer* renderer);
-		~ResourceManager();
+		static ResourceManager& GetInstance();
 
+		ResourceManager(ResourceManager const&) = delete;
+		void operator=(ResourceManager const&) = delete;
+
+		void Init(SDL_Renderer * renderer);
+		void CleanupResources();
 		void LoadTexturesFromFile(const std::string &file, SDL_Renderer *renderer);
 		void LoadTextureAtlasFromJSON(const std::string &file, const std::string &imagePath, SDL_Renderer *renderer);
 		TextureResource* GetTextureResource(const std::string &resourceName);
 	private:
+		ResourceManager() { }
+
 		std::map<std::string, TextureResource*> _textures;
 		const std::string _defaultImagePath = "res\\images\\defaultImage.png";
 		const std::string _defaultImageName = "defaultImage";

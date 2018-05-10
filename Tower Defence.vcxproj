@@ -151,8 +151,8 @@
     <ClCompile Include="TextureResource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="defaultImage.png" />
     <Image Include="res\images\background.png" />
+    <Image Include="res\images\defaultImage.png" />
     <Image Include="res\images\image.png" />
     <Image Include="res\images\spritesheet.png" />
   </ItemGroup>

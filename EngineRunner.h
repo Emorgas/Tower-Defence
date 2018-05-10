@@ -27,14 +27,14 @@ namespace Engine
 		
 		void SetupScene();
 		void ProcessInput();
+		void ProcessLogic();
 		void RenderScene();
 		void LoadResources();
 
-		bool isRunning;
-		SDL_Window* window;
-		SDL_Renderer* renderer;
-		ResourceManager* resourceManager;
-		std::vector<Sprite*> backgroundTiles;
+		bool _isRunning;
+		SDL_Window* _window;
+		SDL_Renderer* _renderer;
+		std::vector<Sprite*> _backgroundTiles;
 		const int SCREEN_WIDTH = 640;
 		const int SCREEN_HEIGHT = 480;
 	};

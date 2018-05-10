@@ -1,11 +1,10 @@
 #include "Sprite.h"
-
+#include "ResourceManager.h"
 namespace Engine
 {
 	Sprite::Sprite()
 	{
-		// TODO: Create resource manager singleton for default allocation
-		//_texture = 
+		_texture = ResourceManager::GetInstance().GetTextureResource("defaultImage");
 	}
 
 	Sprite::Sprite(TextureResource *texture, float xPos, float yPos, float xScale, float yScale)

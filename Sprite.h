@@ -22,7 +22,7 @@ namespace Engine
 		SDL_Point GetScale();
 		void MovePos(SDL_Point moveVector);
 	private:
-		TextureResource * _texture;
+		TextureResource* _texture;
 		SDL_Point _position;
 		SDL_Point _scale;
 		float _width;

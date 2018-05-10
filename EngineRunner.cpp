@@ -18,18 +18,18 @@ namespace Engine
 			return false;
 		}
 
-		window = SDL_CreateWindow("Tower Defence", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (window == nullptr)
+		_window = SDL_CreateWindow("Tower Defence", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		if (_window == nullptr)
 		{
 			Logger::LogSDLError(std::cout, "CreateWindow");
 			SDL_Quit();
 			return false;
 		}
 
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-		if (renderer == nullptr)
+		_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		if (_renderer == nullptr)
 		{
-			SDL_DestroyWindow(window);
+			SDL_DestroyWindow(_window);
 			Logger::LogSDLError(std::cout, "CreateRenderer");
 			SDL_Quit();
 			return false;
@@ -42,35 +42,32 @@ namespace Engine
 			return false;
 		}
 
-		resourceManager = new ResourceManager(renderer);
+		ResourceManager::GetInstance().Init(_renderer);
 
 		return true;
 	}
 
 	void EngineRunner::LoadResources()
 	{
-		resourceManager->LoadTexturesFromFile("res\\textures.txt", renderer);
-		resourceManager->LoadTextureAtlasFromJSON("res\\spritesheet.json", "res\\images\\spritesheet.png", renderer);
+		ResourceManager::GetInstance().LoadTexturesFromFile("res\\textures.txt", _renderer);
+		ResourceManager::GetInstance().LoadTextureAtlasFromJSON("res\\spritesheet.json", "res\\images\\spritesheet.png", _renderer);
 	}
 
 	void EngineRunner::SetupScene()
 	{
 		LoadResources();
 
-		int tileWidth = resourceManager->GetTextureResource("D_P_HTSPT_A")->GetWidth();
-		int tileHeight = resourceManager->GetTextureResource("D_P_HTSPT_A")->GetHeight();
+		int tileWidth = ResourceManager::GetInstance().GetTextureResource("D_P_FULL")->GetWidth();
+		int tileHeight = ResourceManager::GetInstance().GetTextureResource("D_P_FULL")->GetHeight();
 		int xTiles = ceil((float)SCREEN_WIDTH / (float)tileWidth);
 		int yTiles = ceil((float)SCREEN_HEIGHT / (float)tileHeight);
-		backgroundTiles = std::vector<Sprite*>();
+		_backgroundTiles = std::vector<Sprite*>();
 		for (int i = 0; i < xTiles * yTiles; ++i)
 		{
 			int x = i % xTiles;
 			int y = i / xTiles;
-			backgroundTiles.emplace_back(new Sprite(resourceManager->GetTextureResource("D_P_HTSPT_A"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
+			_backgroundTiles.emplace_back(new Sprite(ResourceManager::GetInstance().GetTextureResource("D_P_FULL"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
 		}
-		SDL_Point moveVector;
-		moveVector.x = 1;
-		moveVector.y = 1;
 
 	}
 
@@ -86,24 +83,30 @@ namespace Engine
 		}
 	}
 
+	void EngineRunner::ProcessLogic()
+	{
+
+	}
+
 	void EngineRunner::RenderScene()
 	{
-		SDL_RenderClear(renderer);
-		for (std::vector<int>::size_type i = 0; i != backgroundTiles.size(); i++) {
-			backgroundTiles[i]->Draw(renderer);
+		SDL_RenderClear(_renderer);
+		for (std::vector<int>::size_type i = 0; i != _backgroundTiles.size(); i++) {
+			_backgroundTiles[i]->Draw(_renderer);
 		}
-		SDL_RenderPresent(renderer);
+		SDL_RenderPresent(_renderer);
 	}
 
 	int EngineRunner::Run()
 	{
-		isRunning = true;
+		_isRunning = true;
 
 		SetupScene();
 
-		while (isRunning)
+		while (_isRunning)
 		{
 			ProcessInput();
+			ProcessLogic();
 			RenderScene();
 		}
 
@@ -114,14 +117,14 @@ namespace Engine
 
 	void EngineRunner::Stop()
 	{
-		isRunning = false;
+		_isRunning = false;
 	}
 
 	void EngineRunner::Cleanup()
 	{
-		delete resourceManager;
-		SDL_DestroyRenderer(renderer);
-		SDL_DestroyWindow(window);
+		ResourceManager::GetInstance().CleanupResources();
+		SDL_DestroyRenderer(_renderer);
+		SDL_DestroyWindow(_window);
 		IMG_Quit();
 		SDL_Quit();
 	}
