@@ -21,11 +21,11 @@ namespace Engine
 		Sprite(_texture, xPos, yPos, 1.0f, 1.0f);
 	}
 
-	Sprite::Sprite(TextureResource *texture, SDL_Point *position, SDL_Point *scale)
+	Sprite::Sprite(TextureResource *texture, Point2D *position, Point2D *scale)
 	{
 		Sprite(texture, position->x, position->y, scale->x, scale->y);
 	}
-	Sprite::Sprite(TextureResource *texture, SDL_Point *position)
+	Sprite::Sprite(TextureResource *texture, Point2D *position)
 	{
 		Sprite(texture, position->x, position->y, 1.0f, 1.0f);
 	}
@@ -36,6 +36,8 @@ namespace Engine
 
 	Sprite::~Sprite()
 	{
+		// Null the texture reference, textures a cleaned up in resource manager
+		_texture = nullptr;
 	}
 
 	void Sprite::Draw(SDL_Renderer *renderer)
@@ -58,19 +60,41 @@ namespace Engine
 		return _texture->GetHeight() * _scale.y;
 	}
 
-	SDL_Point Sprite::GetPosition()
+	Point2D Sprite::GetPosition()
 	{
 		return _position;
 	}
 
-	SDL_Point Sprite::GetScale()
+	Point2D Sprite::GetScale()
 	{
 		return _scale;
 	}
 
-	void Sprite::MovePos(SDL_Point moveVector)
+	void Sprite::SetPosition(Point2D newPos)
 	{
-		_position.x = _position.x + moveVector.x;
-		_position.y = _position.y + moveVector.y;
+		_position.x = newPos.x;
+		_position.y = newPos.y;
+	}
+
+	void Sprite::SetPosition(int x, int y)
+	{
+		_position.x = x;
+		_position.y = y;
+	}
+
+	void Sprite::SetScale(Point2D newScale)
+	{
+		_scale.x = newScale.x;
+		_scale.y = newScale.y;
+	}
+
+	void Sprite::SetXScale(int xScale)
+	{
+		_scale.x = xScale;
+	}
+
+	void Sprite::SetYScale(int yScale)
+	{
+		_scale.y = yScale;
 	}
 }

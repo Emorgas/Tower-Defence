@@ -1,6 +1,5 @@
 #include "EngineRunner.h"
 
-
 namespace Engine
 {
 	EngineRunner& EngineRunner::GetInstance()
@@ -46,6 +45,11 @@ namespace Engine
 
 		return true;
 	}
+	
+	void EngineRunner::AddActorToUpdate(Actor* act)
+	{
+		_actorsToUpdate.emplace_back(act);
+	}
 
 	void EngineRunner::LoadResources()
 	{
@@ -69,6 +73,18 @@ namespace Engine
 			_backgroundTiles.emplace_back(new Sprite(ResourceManager::GetInstance().GetTextureResource("D_P_FULL"), (float)(x * tileWidth), (float)(y * tileHeight), 1.0f, 1.0f));
 		}
 
+		Actor* testActor = new Actor(ResourceManager::GetInstance().GetTextureResource("MAN_GREEN"), 150, 150, 1.0f, 1.0f);
+
+	}
+
+
+	void EngineRunner::CalculateDelta()
+	{
+		_lastTime = _timeNow;
+		_timeNow = SDL_GetTicks();
+
+		
+		_deltaTime = (_timeNow - _lastTime) / 1000.0f;
 	}
 
 	void EngineRunner::ProcessInput()
@@ -83,6 +99,14 @@ namespace Engine
 		}
 	}
 
+	void EngineRunner::UpdateActors()
+	{
+		for (std::vector<int>::size_type i = 0; i != _actorsToUpdate.size(); i++)
+		{
+			_actorsToUpdate[i]->Update(_deltaTime);
+		}
+	}
+
 	void EngineRunner::ProcessLogic()
 	{
 
@@ -94,6 +118,9 @@ namespace Engine
 		for (std::vector<int>::size_type i = 0; i != _backgroundTiles.size(); i++) {
 			_backgroundTiles[i]->Draw(_renderer);
 		}
+		for (std::vector<int>::size_type i = 0; i != _actorsToUpdate.size(); i++) {
+			_actorsToUpdate[i]->Draw(_renderer);
+		}
 		SDL_RenderPresent(_renderer);
 	}
 
@@ -103,9 +130,14 @@ namespace Engine
 
 		SetupScene();
 
+		_timeNow = SDL_GetTicks();
+		_lastTime = 0;
+
 		while (_isRunning)
 		{
+			CalculateDelta();
 			ProcessInput();
+			UpdateActors();
 			ProcessLogic();
 			RenderScene();
 		}
@@ -123,6 +155,11 @@ namespace Engine
 	void EngineRunner::Cleanup()
 	{
 		ResourceManager::GetInstance().CleanupResources();
+		for (std::vector<int>::size_type i = 0; i != _actorsToUpdate.size(); i++)
+		{
+			delete _actorsToUpdate[i];
+		}
+		_actorsToUpdate.clear();
 		SDL_DestroyRenderer(_renderer);
 		SDL_DestroyWindow(_window);
 		IMG_Quit();
